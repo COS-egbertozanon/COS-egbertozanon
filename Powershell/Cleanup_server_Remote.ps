@@ -1,0 +1,21 @@
+# This Script clean up  windows updates and SP backups and  the windows update cache files
+# pre-requisites:  
+# the computer running needs to have sysinternal tools installed
+# To download it run:
+# wget https://download.sysinternals.com/files/SysinternalsSuite.zip -OutFile .\Downloads\SysinternalsSuite.zipEX
+# unzip.exe .\Downloads\SysinternalsSuite.zip -d .\Downloads\SysinternalsSuite
+
+
+
+$COMP=READ-HOST -Prompt "ENTER COMPUTERNAME"
+
+
+.\Downloads\SysinternalsSuite\PsExec.exe \\$COMP -h  -background -nobanner -accepteula  dism.exe /online /cleanup-image /spsuperseded /hidesp
+ START-SLEEP -Seconds 5
+.\Downloads\SysinternalsSuite\PsExec.exe \\$COMP -h  -background -nobanner -accepteula   Dism.exe /online /Cleanup-Image /StartComponentCleanup /ResetBase
+ START-SLEEP -Seconds 5
+.\Downloads\SysinternalsSuite\PsExec.exe \\$COMP -h  -background -nobanner -accepteula  cmd -c "NET-STOP wuauserv"
+ START-SLEEP -Seconds 5
+.\Downloads\SysinternalsSuite\PsExec.exe \\$COMP -h  -background -nobanner -accepteula  cmd -c "del.exe C:\Windows\SoftwareDistribution\* /F /Q"
+ START-SLEEP -Seconds 5
+.\Downloads\SysinternalsSuite\PsExec.exe \\$COMP -h  -background -nobanner -accepteula   NET-START wuauserv
